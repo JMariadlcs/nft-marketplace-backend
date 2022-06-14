@@ -29,7 +29,7 @@ const networkConfig = {
 
 const DECIMALS = "18"
 const INITIAL_PRICE = "200000000000000000000"
-const frontEndContractsFile = "../nextjs-full-stack/constants/contractAddresses.json"
+const frontEndContractsFile = "../nft-marketplace-frontend-moralis/constants/networkMapping.json"
 const frontEndAbiFile = "../nextjs-full-stack/constants/abi.json"
 const developmentChains = ["hardhat", "localhost"]
 
