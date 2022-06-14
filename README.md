@@ -105,7 +105,7 @@ yarn hardhat node
 3. Run scripts:
 
 ```bash
-yarn hardhat run scripts/mint-and-list.js
+yarn hardhat run scripts/mint-and-list.js --network localhost
 ```
 
 ## REMINDERS
