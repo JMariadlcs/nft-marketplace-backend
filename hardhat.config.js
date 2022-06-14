@@ -10,6 +10,7 @@ require("dotenv").config()
  */
 
 const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL
+const POLYGON_MUMBAI_RPC_URL = process.env.POLYGON_MUMBAI_RPC_URL
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
@@ -19,7 +20,6 @@ module.exports = {
   networks: {
     hardhat: {
       chainId: 31337,
-      blockConfirmations: 1,
     },
     localhost: {
       chainId: 31337,
@@ -29,6 +29,14 @@ module.exports = {
       url: RINKEBY_RPC_URL,
       accounts: [PRIVATE_KEY],
       saveDeployments: true,
+      blockConfirmations: 6,
+    },
+    polygon: {
+      url: POLYGON_MUMBAI_RPC_URL,
+      accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
+      saveDeployments: true,
+      chainId: 80001,
+      blockConfirmations: 6,
     },
   },
   gasReporter: {

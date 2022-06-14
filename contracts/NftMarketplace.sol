@@ -24,7 +24,7 @@ error  NftMarketPlace__NoProceeds();
 error NftMarketPlace__TransferFailed();
 
 
-contract NftMarketPlace is ReentrancyGuard {
+contract NftMarketplace is ReentrancyGuard {
 
     /// @notice Types
     struct Listing {
