@@ -91,6 +91,23 @@ and to see test coverage:
 yarn hardhat coverage
 ```
 
+## HOW TO EXECUTE SCRIPTS
+
+-   Execute scripts locally:
+
+1. Create local blockchain:
+
+```bash
+yarn hardhat node
+```
+
+2. Open new terminal.
+3. Run scripts:
+
+```bash
+yarn hardhat run scripts/mint-and-list.js
+```
+
 ## REMINDERS
 
 **NOTICE**: most of the below mentioned dependencies are already installed, just check it and include the corresponding `requires` inside [hardhat.config.js](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/hardhat.config.js).
