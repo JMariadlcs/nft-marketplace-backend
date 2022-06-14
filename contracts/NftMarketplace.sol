@@ -37,6 +37,7 @@ contract NftMarketPlace {
 
     /// @notice Events
     event ItemListed(address indexed seller, address indexed nftAddress, uint256 indexed tokenId, uint256 price);
+    event ItemBought(address indexed buyer, address indexed nftAddress, uint256 indexed tokenId, uint256 price);
 
     /// @notice Modifiers
     modifier isOwner(address nftAddress, uint256 tokenId, address spender) {
@@ -65,7 +66,6 @@ contract NftMarketPlace {
     }
 
    
-
     //////////////////////
     //  Main Functions // 
     /////////////////////
@@ -97,12 +97,24 @@ contract NftMarketPlace {
     * - Payable to be able to receive ETH
     * - Should include isListed modifier
     * - Should check if msg.value > price
+    * - Update mappings
+    * - Delete listing mapping (item is not listed anymore)
+    * - Transfer NFT (using OpenZeppeling safeTransferFrom function)
+    * - Emit event
+    * - ❌ No send Ether to the user
+    * - ✅ Push them to withdraw from proceeds listing (better practice)
     */
     function buyItem(address nftAddress, uint256 tokenId) external payable isListed(nftAddress, tokenId) {
         Listing memory listedItem = s_listings[nftAddress][tokenId];
         if (msg.value <= listedItem.price) {
             revert NftMarketPlace__PriceNotMet(nftAddress, tokenId, listedItem.price);
         }
+        s_proceeds[listedItem.seller] = s_proceeds[listedItem.seller] + msg.value;
+        delete(s_listings[nftAddress][tokenId]);
+        // Could just send the money...
+        // https://fravoll.github.io/solidity-patterns/pull_over_push.html
+        IERC721(nftAddress).safeTransferFrom(listedItem.seller, msg.sender, tokenId);
+        emit ItemBought(msg.sender, nftAddress, tokenId, listedItem.price);
     }
 
 }
