@@ -113,6 +113,8 @@ contract NftMarketPlace {
         delete(s_listings[nftAddress][tokenId]);
         // Could just send the money...
         // https://fravoll.github.io/solidity-patterns/pull_over_push.html
+        // - ❌ No send Ether to the user
+        // ✅ Push them to withdraw from proceeds listing (better practice)
         IERC721(nftAddress).safeTransferFrom(listedItem.seller, msg.sender, tokenId);
         emit ItemBought(msg.sender, nftAddress, tokenId, listedItem.price);
     }
