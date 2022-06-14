@@ -4,11 +4,11 @@ pragma solidity ^0.8.7;
 
 /** 
 1. Create a Decentralized MarketPlace ✅
-    1. `listItem`: List NFTs on the Marketplace.
-    2. `buyItem`: Buy NFTs directly on the Marketplace.
-    3. `cancelItem`: Cancel item listing.
-    4. `updateListing`: Update listing price.
-    5. `withdrawProceeds`: Withdraw funds from sold NFTs.
+    1. `listItem`: List NFTs on the Marketplace. ✅
+    2. `buyItem`: Buy NFTs directly on the Marketplace. ✅
+    3. `cancelItem`: Cancel item listing. ✅
+    4. `updateListing`: Update listing price. ✅
+    5. `withdrawProceeds`: Withdraw funds from sold NFTs. ✅
 */
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
@@ -20,6 +20,8 @@ error NftMarketPlace__NotOwner();
 error NftMarketPlace__AlreadyListed(address nftAddress, uint256 tokenId);
 error NftMarketPlace__NotListed(address nftAddress, uint256 tokenId);
 error NftMarketPlace__PriceNotMet(address nftAddress, uint256 tokenId, uint256 price);
+error  NftMarketPlace__NoProceeds();
+error NftMarketPlace__TransferFailed();
 
 
 contract NftMarketPlace is ReentrancyGuard {
@@ -39,6 +41,7 @@ contract NftMarketPlace is ReentrancyGuard {
     /// @notice Events
     event ItemListed(address indexed seller, address indexed nftAddress, uint256 indexed tokenId, uint256 price);
     event ItemBought(address indexed buyer, address indexed nftAddress, uint256 indexed tokenId, uint256 price);
+    event ItemCanceled(address indexed, address indexed nftAddress, uint256 indexed tokenId);
 
     /// @notice Modifiers
     modifier isOwner(address nftAddress, uint256 tokenId, address spender) {
@@ -121,4 +124,62 @@ contract NftMarketPlace is ReentrancyGuard {
         emit ItemBought(msg.sender, nftAddress, tokenId, listedItem.price);
     }
 
+    /**
+    * @notice Function cancel NFT sell listing
+    * @dev
+    * - Should include isListed modifier
+    * - Should include isOwner
+    * - Delete listing mapping (item is not listed anymore)
+    * - Emit event
+    */
+    function cancelListing(address nftAddress, uint256 tokenId) external isOwner(nftAddress, tokenId, msg.sender) isListed (nftAddress, tokenId) {
+        delete (s_listings[nftAddress][tokenId]);
+        emit ItemCanceled(msg.sender, nftAddress, tokenId);
+    }
+
+    /**
+    * @notice Function update selling NFT price
+    * @dev
+    * - Should include nonReentrant modifier from Openzeppelin (avoid Reentrancy attack)
+    * - Should include isListed modifier
+    * - Should include isOwner
+    * - Update mapping
+    * - Emit event
+    */
+    function updateLiting(address nftAddress, uint256 tokenId, uint256 newPrice) external nonReentrant isOwner(nftAddress, tokenId, msg.sender) isListed (nftAddress, tokenId) {
+        s_listings[nftAddress][tokenId].price = newPrice;
+        emit ItemListed(msg.sender, nftAddress, tokenId, newPrice);
+    }
+
+    /**
+    * @notice Function to withdraw proceeds
+    * @dev
+    * - Should check that procees are > 0, if not -> revert
+    * - Update mapping
+    * - Transfer funds
+    * - Check transfer is correctly done, if not -> revert
+    */
+    function withdrawProceeds() external {
+        uint256 proceeds = s_proceeds[msg.sender];
+        if (proceeds <= 0) {
+            revert NftMarketPlace__NoProceeds();
+        }
+        s_proceeds[msg.sender] = 0;
+        (bool success, ) = payable(msg.sender).call{value: proceeds}("");
+        if (!success) {
+            revert NftMarketPlace__TransferFailed();
+        }
+    }
+
+    //////////////////////
+    //  Getter Functions // 
+    /////////////////////
+
+    function getListing(address nftAddress, uint256 tokenId) external view returns (Listing memory) {
+        return s_listings[nftAddress][tokenId];
+    }
+
+    function getProceeds(address seller) external view returns (uint256) {
+        return s_proceeds[seller];
+    }
 }
