@@ -37,6 +37,130 @@ yarn add --dev @nomiclabs/hardhat-waffle@^2.0.0 ethereum-waffle@^3.0.0 chai@^4.2
 yarn add --dev @openzeppelin/contracts
 ```
 
+## HOW TO COMPILE
+
+```bash
+yarn hardhat compile
+```
+
+or
+
+```bash
+npx hardhat compile
+```
+
+## HOW TOT DEPLOY
+
+If you want to use [Hardhat shorthand](https://hardhat.org/guides/shorthand):
+
+```bash
+yarn global add hardhat-shorthand
+```
+
+-   Deploy to local network (Harhat by default):
+
+```bash
+hh compile
+hh deploy
+```
+
+-   Deploy to a TESTNET (Rinkeby):
+    You can not deploy all scripts at the same time because you can deploy [mint.js](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/deploy/04-mint.js) script without firtly add randomNFT to ConsumerBase.
+
+To deploy every script expect [mint.js](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/deploy/04-mint.js):
+
+```bash
+yarn hardhat deploy --network rinkeby --tags main
+```
+
+## HOW TO TEST
+
+Two types of tests are created for this project:
+
+1. "Unit tests" inside [unit](https://github.com/JMariadlcs/nfts-fullrepo/tree/main/test/unit): used to test functions separately
+
+To execute tests **unit tests** (on development chain):
+
+```bash
+yarn hardhat test
+```
+
+and to see test coverage:
+
+```bash
+yarn hardhat coverage
+```
+
+## REMINDERS
+
+**NOTICE**: most of the below mentioned dependencies are already installed, just check it and include the corresponding `requires` inside [hardhat.config.js](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/hardhat.config.js).
+
+-   If you want to execute solhint to search for potential Solidity errors
+    Execute:
+
+```bash
+yarn solhint contracts/*.sol
+```
+
+-   If you want to use a text formarter:
+    Check [.prettierrc](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/.prettierrc) and [.prettierignore](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/.prettierignore).
+
+-   To automatically verify our contract on etherscan:
+
+```bash
+yarn add --dev @nomiclabs/hardhat-etherscan
+```
+
+Then, include inside [hardhat.config.js](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/hardhat.config.js):
+
+```bash
+require("@nomiclabs/hardhat-etherscan");
+```
+
+Add `ETHERSCAN_API_KEY` inside `.env` file.
+
+-   Use Hardhat Gas Reporter:
+
+```bash
+yarn add --dev hardhat-gas-reporter
+```
+
+Then, include inside [hardhat.config.js](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/hardhat.config.js):
+
+```bash
+require("hardhat-gas-reporter");
+```
+
+-   Use Solidity Coverage:
+
+```bash
+yarn add --dev solidity-coverage
+```
+
+Then, include inside [hardhat.config.js](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/hardhat.config.js):
+
+```bash
+require("solidity-coverage");
+```
+
+In order to execute it:
+
+```bash
+yarn hardhat coverage
+```
+
+-   Use Hardhat Waffle:
+
+```bash
+yarn add @nomiclabs/hardhat-waffle
+```
+
+Then, include inside [hardhat.config.js](https://github.com/JMariadlcs/nfts-fullrepo/blob/main/hardhat.config.js):
+
+```bash
+require("@nomiclabs/hardhat-waffle");
+```
+
 ## RESOURCES
 
 -   [Artion-Contracts](https://github.com/Fantom-foundation/Artion-Contracts): Open Source Marketplace backend implementation.
