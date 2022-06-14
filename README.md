@@ -27,3 +27,5 @@ yarn add --dev @nomiclabs/hardhat-waffle@^2.0.0 ethereum-waffle@^3.0.0 chai@^4.2
 ## RESOURCES
 
 - [Artion-Contracts](https://github.com/Fantom-foundation/Artion-Contracts): Open Source Marketplace backend implementation.
+- [Patrick's repo](https://github.com/PatrickAlphaC/hardhat-nft-marketplace-fcc): Repo from Patricks ffc
+- [Patrick's fcc video](https://www.youtube.com/watch?v=gyMwXuJrbJQ&t=15996s)
