@@ -1,6 +1,11 @@
 /* This Script is used to deploy update frontend contract addresses and ABI
-     Deploy: 'yarn hardhat deploy --network rinkeby'
-    or 'npx hardhat deploy --network rinkeby' */
+    - LOCALLY:
+        Deploy all scripts: 'yarn hardhat deploy'
+        Deploy ONLY this script: 'yarn hardhat deploy --tags frontend --network localhost'
+    - TESTNET
+        Deploy all scripts: 'yarn hardhat deploy --network rinkeby --tags frontend'
+        Deploy ONLY this script: 'yarn hardhat deploy --network rinkeby --tags frontend'
+*/
 
 const { frontEndContractsFile, frontEndAbiFile } = require("../helper-hardhat-config")
 const fs = require("fs")
@@ -9,7 +14,7 @@ const { network, ethers } = require("hardhat")
 module.exports = async () => {
     if (process.env.UPDATE_FRONT_END) {
         console.log("Writing to front end...")
-        //await updateAbi()
+        await updateAbi()
         await updateContractAddresses()
         console.log("Front end written!")
     }
@@ -17,7 +22,10 @@ module.exports = async () => {
 
 async function updateAbi() {
     const nftMarketplace = await ethers.getContract("NftMarketplace")
-    fs.writeFileSync(frontEndAbiFile, raffle.interface.format(ethers.utils.FormatTypes.json))
+    fs.writeFileSync(`${frontEndAbiFile}NftMarketplace.json`, nftMarketplace.interface.format(ethers.utils.FormatTypes.json))
+
+    const basicNft = await ethers.getContract("BasicNft")
+    fs.writeFileSync(`${frontEndAbiFile}BasicNft.json`, basicNft.interface.format(ethers.utils.FormatTypes.json))
 }
 
 async function updateContractAddresses() {
