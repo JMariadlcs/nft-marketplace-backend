@@ -40,8 +40,9 @@ contract NftMarketplace is ReentrancyGuard {
 
     /// @notice Events
     event ItemListed(address indexed seller, address indexed nftAddress, uint256 indexed tokenId, uint256 price);
+    event ItemCanceled(address indexed seller, address indexed nftAddress, uint256 indexed tokenId);
     event ItemBought(address indexed buyer, address indexed nftAddress, uint256 indexed tokenId, uint256 price);
-    event ItemCanceled(address indexed, address indexed nftAddress, uint256 indexed tokenId);
+    
 
     /// @notice Modifiers
     modifier isOwner(address nftAddress, uint256 tokenId, address spender) {
